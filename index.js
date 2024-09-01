@@ -37,6 +37,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 body: JSON.stringify({ videoUrl: videoUrl }),
             });
 
+            console.log('Resposta do servidor:', response);
+
             // if (!response.ok) {
             //     throw new Error(`Erro na resposta do servidor: ${response.status} ${response.statusText}`);
             // }

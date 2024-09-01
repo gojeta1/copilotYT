@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             // Filtrar registros com o mesmo URL do vídeo
-            const matchingRecords = searchData.records.filter(record => record.fields.videoUrl === videoUrl);
+            const matchingRecords = searchData.records.filter(record => record.fields.link === videoUrl);
 
             if (matchingRecords.length === 0) {
                 throw new Error('Nenhum registro encontrado para o URL do vídeo fornecido');

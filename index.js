@@ -113,12 +113,26 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 console.log(`Status atual: ${recordData.fields.status}`);
             }
-        }, 5000);
+        }, 10000);
 
         // Timeout após 1 minuto se o status não for concluído
         setTimeout(() => {
             clearInterval(checkStatusInterval);
-            throw new Error('Não foi possível concluir a análise, status final: ' + recordData.fields.status);
+            fetch(`https://api.airtable.com/v0/app1QgNkjdrTRwIxB/Transcrições/${mostRecentRecord}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer patvbrtKYLj5eJCFm.35b0e1ca60d35eabaa5f89beff57bb2a426670719f7b9e0010eb14f83ddedabf',
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                throw new Error(`Não foi possível concluir a análise, status final: ${data.fields.status}`);
+            })
+            .catch(error => {
+                console.error('Erro ao verificar o status final:', error);
+                throw new Error('Não foi possível concluir a análise dentro do tempo limite');
+            });
         }, 120000);
     }
 

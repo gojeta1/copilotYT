@@ -4,12 +4,20 @@
     {
       "src": "api/app.py",
       "use": "@vercel/python"
+    },
+    {
+      "src": "index.html",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
     {
       "src": "/transcribe(.*)",
       "dest": "api/app.py"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ]
 }

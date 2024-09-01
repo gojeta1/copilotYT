@@ -78,12 +78,17 @@ document.addEventListener('DOMContentLoaded', function() {
         if (searchData.records.length === 0) {
             throw new Error('Nenhum registro encontrado no Airtable para o URL do vídeo fornecido');
         }
-
-        // Ordenar os registros pela data mais recente
-        searchData.records.sort((a, b) => new Date(b.createdTime) - new Date(a.createdTime));
+        // Ordenar os registros pela data mais recente, incluindo minutos e segundos
+        searchData.records.sort((a, b) => {
+            const dateA = new Date(a.createdTime);
+            const dateB = new Date(b.createdTime);
+            return dateB - dateA; // Isso já leva em conta horas, minutos e segundos
+        });
 
         // Pegar o registro mais recente
         const mostRecentRecord = searchData.records[0].id;
+
+        console.log(`Registro mais recente: ${mostRecentRecord}, criado em: ${searchData.records[0].createdTime}`);
 
         // Verificar o status do registro mais recente a cada 5 segundos
         const checkStatusInterval = setInterval(async () => {
@@ -97,7 +102,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (!recordResponse.ok) {
                 clearInterval(checkStatusInterval);
-                throw new Error('Falha ao buscar dados do registro específico no Airtable');
+                throw new Error('Falha ao buscar dados do registro específico no Banco de Dados');
             }
 
             const recordData = await recordResponse.json();
@@ -105,6 +110,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (recordData.fields.status === 'Concluido') {
                 clearInterval(checkStatusInterval);
                 displayResults(recordData);
+                results.classList.remove('hidden');
             } else {
                 console.log(`Status atual: ${recordData.fields.status}`);
             }
@@ -133,7 +139,6 @@ document.addEventListener('DOMContentLoaded', function() {
     function displayResults(recordData) {
         analyzeBtn.textContent = 'Analisar Vídeo';
         analyzeBtn.disabled = false;
-        results.classList.remove('hidden');
 
         suggestedTitle.innerHTML = formatText(recordData.fields.titulos) || 'Título não disponível';
         suggestedDescription.innerHTML = formatText(recordData.fields.descrição) || 'Descrição não disponível';

@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(() => {
             clearInterval(checkStatusInterval);
             throw new Error('Não foi possível concluir a análise, status final: ' + recordData.fields.status);
-        }, 60000);
+        }, 120000);
     }
 
     function displayResults(recordData) {

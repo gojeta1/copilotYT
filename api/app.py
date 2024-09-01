@@ -45,10 +45,6 @@ def home():
 
 @app.route('/transcribe', methods=['POST'])
 def transcribe():
-    # if request.method == 'OPTIONS':
-    #     return '', 200
-    
-    # webhook_url = 'https://hook.us1.make.com/l7t8pmuzqax2wa1vvygnxb9k85rdeo6b'
     webhook_url = 'https://guilhermebbcc.app.n8n.cloud/webhook-test/20837bb6-04d4-48fc-91c8-26919f4baac9'
     
     if not request.is_json:
@@ -78,5 +74,5 @@ def transcribe():
         print(f"Erro durante o processamento: {str(e)}", file=sys.stderr)
         return jsonify({"error": str(e)}), 500
 
-if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=10000)
+# Remova o bloco if __name__ == "__main__" para que o app seja executado diretamente pela Vercel
+app.run(host='0.0.0.0', port=10000)

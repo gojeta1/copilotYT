@@ -69,7 +69,9 @@ def transcribe():
                 return jsonify({"error": "Erro ao enviar transcrição para o webhook"}), 500
         else:
             print(f"Não foi possível obter a transcrição para o vídeo {video_id}")
-            return jsonify({"error": "Não foi possível obter a transcrição. Verifique se o vídeo tem legendas disponíveis."}), 404
+            error_message = "Não foi possível obter a transcrição. Verifique se o vídeo tem legendas disponíveis."
+            send_transcript_to_webhook(webhook_url, video_url, error_message)
+            return jsonify({"error": error_message}), 404
     except Exception as e:
         print(f"Erro durante o processamento: {str(e)}", file=sys.stderr)
         # Adicione mais detalhes ao log de erro
@@ -80,11 +82,13 @@ def transcribe():
         vercel_env = {k: v for k, v in os.environ.items() if k.startswith('VERCEL_')}
         print(f"Variáveis de ambiente Vercel: {vercel_env}", file=sys.stderr)
         # Retorne uma resposta mais detalhada
-        return jsonify({
+        error_details = {
             "error": str(e),
             "details": traceback.format_exc(),
             "vercel_env": vercel_env
-        }), 500
+        }
+        send_transcript_to_webhook(webhook_url, video_url, str(error_details))
+        return jsonify(error_details), 500
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=10000, debug=True)

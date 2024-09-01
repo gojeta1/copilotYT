@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             // Pegar o registro mais recente
-            const mostRecentRecord = relevantRecords[0].id;
+            const mostRecentRecord = relevantRecords.records[0].id;
 
             console.log(`Registro mais recente para o vídeo ${videoUrl}: ${mostRecentRecord}, criado em: ${relevantRecords[0].createdTime}`);
 

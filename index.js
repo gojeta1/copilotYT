@@ -20,9 +20,11 @@ document.addEventListener('DOMContentLoaded', function() {
             analyzeBtn.textContent = 'Analisando...';
             analyzeBtn.disabled = true;
             loadingIndicator.classList.remove('hidden');
+            results.classList.add('hidden');
             await transcribeVideo(videoUrl);
         } catch (error) {
             alert('Ocorreu um erro ao analisar o vídeo: ' + error.message);
+            loadingIndicator.classList.add('hidden');
         } finally {
             analyzeBtn.textContent = 'Analisar Vídeo';
             analyzeBtn.disabled = false;

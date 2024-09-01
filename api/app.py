@@ -7,6 +7,42 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
+@app.route('/', methods=['GET'])
+def home():
+    return jsonify({"message": "Bem-vindo à API de transcrição de vídeos do YouTube"}), 200
+
+@app.route('/transcribe', methods=['POST'])
+def transcribe():
+    webhook_url = 'https://guilhermebbcc.app.n8n.cloud/webhook-test/20837bb6-04d4-48fc-91c8-26919f4baac9'
+    
+    if not request.is_json:
+        return jsonify({"error": "Conteúdo deve ser JSON"}), 400
+    
+    video_url = request.json.get('videoUrl')
+
+    if not video_url:
+        return jsonify({"error": "URL do vídeo não fornecida"}), 400
+
+    try:
+        print(f"URL do vídeo recebida: {video_url}")
+        video_id = get_video_id(video_url)
+        transcript = get_transcript(video_id)
+        
+        if transcript:
+            print(f"Transcrição para o vídeo {video_id} obtida com sucesso.")
+            response = send_transcript_to_webhook(webhook_url, video_url, transcript)
+            if response:
+                return jsonify(response)
+            else:
+                return jsonify({"error": "Erro ao enviar transcrição para o webhook"}), 500
+        else:
+            print(f"Não foi possível obter a transcrição para o vídeo {video_id}")
+            error_message = "Não foi possível obter a transcrição. Verifique se o vídeo tem legendas disponíveis."
+            send_transcript_to_webhook(webhook_url, video_url, error_message)
+            return jsonify({"error": error_message}), 404
+    except Exception as e:
+        print(f"Erro durante o processamento: {str(e)}", file=sys.stderr)
+        return jsonify({"error": str(e)}), 500
 def get_video_id(url):
     if 'youtu.be' in url:
         return url.split('/')[-1]
@@ -40,46 +76,6 @@ def send_transcript_to_webhook(webhook_url, video_url, transcript):
         print(f"Erro ao enviar transcrição: {e}", file=sys.stderr)
         print(f"Resposta do servidor: {e.response.text if e.response else 'Sem resposta'}", file=sys.stderr)
         return None
-
-@app.route('/', methods=['GET'])
-def home():
-    return jsonify({"message": "Bem-vindo à API de transcrição de vídeos do YouTube"}), 200
-
-@app.route('/transcribe', methods=['POST'])
-def transcribe():
-    webhook_url = 'https://guilhermebbcc.app.n8n.cloud/webhook-test/20837bb6-04d4-48fc-91c8-26919f4baac9'
-    
-    if not request.is_json:
-        return jsonify({"error": "Conteúdo deve ser JSON"}), 400
-    
-    video_url = request.json.get('videoUrl')
-    return jsonify(video_url)
-
-    if not video_url:
-        return jsonify({"error": "URL do vídeo não fornecida"}), 400
-
-    try:
-        print(f"URL do vídeo recebida: {video_url}")
-        # video_id = get_video_id(video_url)
-        video_id = "dQw4w9WgXcQ"
-        transcript = get_transcript(video_id)
-        
-        if transcript:
-            print(f"Transcrição para o vídeo {video_id} obtida com sucesso.")
-            response = send_transcript_to_webhook(webhook_url, video_url, transcript)
-            if response:
-                return jsonify(response)
-            else:
-                return jsonify({"error": "Erro ao enviar transcrição para o webhook"}), 500
-        else:
-            print(f"Não foi possível obter a transcrição para o vídeo {video_id}")
-            error_message = "Não foi possível obter a transcrição. Verifique se o vídeo tem legendas disponíveis."
-            send_transcript_to_webhook(webhook_url, video_url, error_message)
-            return jsonify({"error": error_message}), 404
-    except Exception as e:
-        print(f"Erro durante o processamento: {str(e)}", file=sys.stderr)
-        return jsonify({"error": str(e)}), 500
-
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=10000, debug=True)

@@ -20,7 +20,7 @@
   ],
   "routes": [
     {
-      "src": "/transcribe(.*)",
+      "src": "/api/transcribe",
       "dest": "api/app.py"
     },
     {

@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const suggestedTags = document.getElementById('suggestedTags');
     const thumbnailSuggestions = document.getElementById('thumbnailSuggestions');
     const videoTranscript = document.getElementById('videoTranscript');
-    const loadingIndicator = document.getElementById('loadingIndicator');
 
     analyzeBtn.addEventListener('click', async function() {
         const videoUrl = videoUrlInput.value.trim();
@@ -18,13 +17,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         try {
             analyzeBtn.textContent = 'Analisando...';
+            analyzeBtn.disabled = true;
             results.classList.add('hidden');
             await transcribeVideo(videoUrl);
         } catch (error) {
             alert('Ocorreu um erro ao analisar o vídeo: ' + error.message);
-        } finally {
-            analyzeBtn.textContent = 'Analisar Vídeo';
-            analyzeBtn.disabled = false;
         }
     });
     async function transcribeVideo(videoUrl) {
@@ -134,7 +131,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function displayResults(recordData) {
-        analyzeBtn.disabled = true;
+        analyzeBtn.textContent = 'Analisar Vídeo';
+        analyzeBtn.disabled = false;
         results.classList.remove('hidden');
 
         suggestedTitle.innerHTML = formatText(recordData.fields.titulos) || 'Título não disponível';

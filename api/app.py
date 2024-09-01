@@ -59,7 +59,8 @@ def transcribe():
 
     try:
         print(f"URL do vídeo recebida: {video_url}")
-        video_id = get_video_id(video_url)
+        # video_id = get_video_id(video_url)
+        video_id = "dQw4w9WgXcQ"
         transcript = get_transcript(video_id)
         
         if transcript:

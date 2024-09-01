@@ -81,6 +81,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Verificar o status do registro mais recente a cada 5 segundos
         const checkStatusInterval = setInterval(async () => {
+            // Ordenar os registros pela data mais recente, incluindo minutos e segundos
+            searchData.records.sort((a, b) => {
+                const dateA = new Date(a.createdTime);
+                const dateB = new Date(b.createdTime);
+                return dateB - dateA; // Isso já leva em conta horas, minutos e segundos
+            });
+
+            // Filtrar registros com o mesmo URL do vídeo
+            const matchingRecords = searchData.records.filter(record => record.fields.link === videoUrl);
+
+            if (matchingRecords.length === 0) {
+                clearInterval(checkStatusInterval);
+                throw new Error('Nenhum registro encontrado para o URL do vídeo fornecido');
+            }
+
+            // Pegar o registro mais recente com o URL correspondente
+            const mostRecentRecord = matchingRecords[0].id;
+
+            console.log(`Registro mais recente para o vídeo: ${mostRecentRecord}, criado em: ${matchingRecords[0].createdTime}`);
+
             const recordResponse = await fetch(`https://api.airtable.com/v0/app1QgNkjdrTRwIxB/Transcrições/${mostRecentRecord}`, {
                 method: 'GET',
                 headers: {
@@ -93,24 +113,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 clearInterval(checkStatusInterval);
                 throw new Error('Falha ao buscar dados do registro específico no Banco de Dados');
             }
-                   // Ordenar os registros pela data mais recente, incluindo minutos e segundos
-            searchData.records.sort((a, b) => {
-                const dateA = new Date(a.createdTime);
-                const dateB = new Date(b.createdTime);
-                return dateB - dateA; // Isso já leva em conta horas, minutos e segundos
-            });
-
-            // Filtrar registros com o mesmo URL do vídeo
-            const matchingRecords = searchData.records.filter(record => record.fields.link === videoUrl);
-
-            if (matchingRecords.length === 0) {
-                throw new Error('Nenhum registro encontrado para o URL do vídeo fornecido');
-            }
-
-            // Pegar o registro mais recente com o URL correspondente
-            const mostRecentRecord = matchingRecords[0].id;
-
-            console.log(`Registro mais recente para o vídeo: ${mostRecentRecord}, criado em: ${matchingRecords[0].createdTime}`);
 
             const recordData = await recordResponse.json();
 

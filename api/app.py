@@ -74,5 +74,5 @@ def transcribe():
         print(f"Erro durante o processamento: {str(e)}", file=sys.stderr)
         return jsonify({"error": str(e)}), 500
 
-# Remova o bloco if __name__ == "__main__" para que o app seja executado diretamente pela Vercel
-app.run(host='0.0.0.0', port=10000)
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=10000, debug=True)

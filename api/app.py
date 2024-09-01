@@ -17,7 +17,9 @@ def get_video_id(url):
 
 def get_transcript(video_id):
     try:
+        print(f"Tentando obter a transcrição para o vídeo ID: {video_id}")
         transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=['pt'])
+        print(f"Transcrição obtida com sucesso: {transcript}")
         return ' '.join([entry['text'] for entry in transcript])
     except Exception as e:
         print(f"Erro ao obter a transcrição: {str(e)}", file=sys.stderr)

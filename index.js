@@ -78,7 +78,17 @@ document.addEventListener('DOMContentLoaded', function() {
         if (searchData.records.length === 0) {
             throw new Error('Nenhum registro encontrado no Airtable para o URL do vídeo fornecido');
         }
+        // Ordenar os registros pela data mais recente, incluindo minutos e segundos
+        searchData.records.sort((a, b) => {
+            const dateA = new Date(a.createdTime);
+            const dateB = new Date(b.createdTime);
+            return dateB - dateA; // Isso já leva em conta horas, minutos e segundos
+        });
 
+        // Pegar o registro mais recente
+        const mostRecentRecord = searchData.records[0].id;
+
+        console.log(`Registro mais recente: ${mostRecentRecord}, criado em: ${searchData.records[0].createdTime}`);
         // Verificar o status do registro mais recente a cada 5 segundos
         const checkStatusInterval = setInterval(async () => {
             const recordResponse = await fetch(`https://api.airtable.com/v0/app1QgNkjdrTRwIxB/Transcrições/${mostRecentRecord}`, {
@@ -93,17 +103,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 clearInterval(checkStatusInterval);
                 throw new Error('Falha ao buscar dados do registro específico no Banco de Dados');
             }
-                   // Ordenar os registros pela data mais recente, incluindo minutos e segundos
-            searchData.records.sort((a, b) => {
-                const dateA = new Date(a.createdTime);
-                const dateB = new Date(b.createdTime);
-                return dateB - dateA; // Isso já leva em conta horas, minutos e segundos
-            });
-
-            // Pegar o registro mais recente
-            const mostRecentRecord = searchData.records[0].id;
-
-            console.log(`Registro mais recente: ${mostRecentRecord}, criado em: ${searchData.records[0].createdTime}`);
 
             const recordData = await recordResponse.json();
 

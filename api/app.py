@@ -72,7 +72,19 @@ def transcribe():
             return jsonify({"error": "Não foi possível obter a transcrição. Verifique se o vídeo tem legendas disponíveis."}), 404
     except Exception as e:
         print(f"Erro durante o processamento: {str(e)}", file=sys.stderr)
-        return jsonify({"error": str(e)}), 500
+        # Adicione mais detalhes ao log de erro
+        import traceback
+        traceback.print_exc()
+        # Verifique se há informações específicas sobre o ambiente Vercel
+        import os
+        vercel_env = {k: v for k, v in os.environ.items() if k.startswith('VERCEL_')}
+        print(f"Variáveis de ambiente Vercel: {vercel_env}", file=sys.stderr)
+        # Retorne uma resposta mais detalhada
+        return jsonify({
+            "error": str(e),
+            "details": traceback.format_exc(),
+            "vercel_env": vercel_env
+        }), 500
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=10000, debug=True)

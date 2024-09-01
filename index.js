@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     async function transcribeVideo(videoUrl) {
         try {
-            const apiUrl = 'https://copilot-yt.vercel.app/api/transcribe';
+            const apiUrl = 'https://copilot-yt.vercel.app/transcribe';
 
             const response = await fetch(apiUrl, {
                 method: 'POST',

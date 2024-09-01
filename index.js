@@ -26,7 +26,6 @@ document.addEventListener('DOMContentLoaded', function() {
         } finally {
             analyzeBtn.textContent = 'Analisar Vídeo';
             analyzeBtn.disabled = false;
-            loadingIndicator.classList.add('hidden');
         }
     });
     async function transcribeVideo(videoUrl) {
@@ -114,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log(`Status atual: ${recordData.fields.status}`);
             }
         }, 10000);
-
+        loadingIndicator.classList.add('hidden');
         // Timeout após 1 minuto se o status não for concluído
         setTimeout(() => {
             clearInterval(checkStatusInterval);

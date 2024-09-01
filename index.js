@@ -93,17 +93,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 clearInterval(checkStatusInterval);
                 throw new Error('Falha ao buscar dados do registro específico no Banco de Dados');
             }
-                   // Ordenar os registros pela data mais recente, incluindo minutos e segundos
-            searchData.records.sort((a, b) => {
+                   // Filtrar os registros para incluir apenas aqueles com o URL do vídeo correspondente
+            const relevantRecords = searchData.records.filter(record => record.fields.videoUrl === videoUrl);
+
+            // Ordenar os registros relevantes pela data mais recente, incluindo minutos e segundos
+            relevantRecords.sort((a, b) => {
                 const dateA = new Date(a.createdTime);
                 const dateB = new Date(b.createdTime);
                 return dateB - dateA; // Isso já leva em conta horas, minutos e segundos
             });
 
             // Pegar o registro mais recente
-            const mostRecentRecord = searchData.records[0].id;
+            const mostRecentRecord = relevantRecords[0].id;
 
-            console.log(`Registro mais recente: ${mostRecentRecord}, criado em: ${searchData.records[0].createdTime}`);
+            console.log(`Registro mais recente para o vídeo ${videoUrl}: ${mostRecentRecord}, criado em: ${relevantRecords[0].createdTime}`);
 
             const recordData = await recordResponse.json();
 

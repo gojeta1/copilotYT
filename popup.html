@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Content Optimizer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>YouTube Content Optimizer</h1>
+        <input type="text" id="videoUrl" placeholder="Cole o link do vídeo aqui">
+        <button id="analyzeBtn">Analisar Vídeo</button>
+        <div id="loadingIndicator" class="hidden">Buscando dados do Airtable...</div>
+        <div id="results" class="hidden">
+            <h2>Resultados da Análise</h2>
+            <div class="result-section">
+                <h3>Título Sugerido</h3>
+                <p id="suggestedTitle"></p>
+            </div>
+            <div class="result-section">
+                <h3>Descrição Otimizada</h3>
+                <p id="suggestedDescription"></p>
+            </div>
+            <div class="result-section">
+                <h3>Tags Recomendadas</h3>
+                <p id="suggestedTags"></p>
+            </div>
+            <div class="result-section">
+                <h3>Resumo do Vídeo</h3>
+                <p id="videoTranscript"></p>
+            </div>
+            <div class="result-section">
+                <h3>Sugestões de Thumbnail</h3>
+                <div id="thumbnailSuggestions"></div>
+            </div>
+        </div>
+    </div>
+    <script src="popup.js"></script>
+</body>
+</html>

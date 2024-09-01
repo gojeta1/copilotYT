@@ -8,12 +8,28 @@
     {
       "src": "index.html",
       "use": "@vercel/static"
+    },
+    {
+      "src": "styles.css",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "index.js",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
     {
       "src": "/transcribe(.*)",
       "dest": "api/app.py"
+    },
+    {
+      "src": "/styles.css",
+      "dest": "/styles.css"
+    },
+    {
+      "src": "/index.js",
+      "dest": "/index.js"
     },
     {
       "src": "/(.*)",

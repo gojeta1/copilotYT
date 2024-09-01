@@ -20,9 +20,11 @@ def transcribe():
     
     video_url = request.json.get('videoUrl')
 
+
     if not video_url:
         return jsonify({"error": "URL do vídeo não fornecida"}), 400
 
+    return jsonify({"valor": video_url})
     try:
         print(f"URL do vídeo recebida: {video_url}")
         video_id = get_video_id(video_url)

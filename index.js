@@ -106,14 +106,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const recordData = await recordResponse.json();
 
-            if (recordData.fields.status === 'concluido') {
+            if (recordData.fields.status === 'Concluido') {
                 clearInterval(checkStatusInterval);
                 displayResults(recordData);
             } else {
                 console.log(`Status atual: ${recordData.fields.status}`);
             }
         }, 10000);
-        loadingIndicator.classList.add('hidden');
         // Timeout após 1 minuto se o status não for concluído
         setTimeout(() => {
             clearInterval(checkStatusInterval);
@@ -136,6 +135,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function displayResults(recordData) {
+        loadingIndicator.classList.add('hidden');
         results.classList.remove('hidden');
 
         suggestedTitle.innerHTML = formatText(recordData.fields.titulos) || 'Título não disponível';

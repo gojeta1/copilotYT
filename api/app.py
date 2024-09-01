@@ -53,6 +53,7 @@ def transcribe():
         return jsonify({"error": "Conteúdo deve ser JSON"}), 400
     
     video_url = request.json.get('videoUrl')
+    return jsonify(video_url)
 
     if not video_url:
         return jsonify({"error": "URL do vídeo não fornecida"}), 400

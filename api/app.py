@@ -59,7 +59,7 @@ def transcribe():
         print(f"URL do vídeo recebida: {video_url}")
         video_id = get_video_id(video_url)
         transcript = get_transcript(video_id)
-        return jsonify(transcript)
+        
         if transcript:
             print(f"Transcrição para o vídeo {video_id} obtida com sucesso.")
             response = send_transcript_to_webhook(webhook_url, video_url, transcript)
@@ -74,7 +74,8 @@ def transcribe():
             return jsonify({"error": error_message}), 404
     except Exception as e:
         print(f"Erro durante o processamento: {str(e)}", file=sys.stderr)
-        return jsonify(e), 500
+        return jsonify({"error": str(e)}), 500
+
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=10000, debug=True)

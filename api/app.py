@@ -26,6 +26,13 @@ def transcribe():
     try:
         print(f"URL do vídeo recebida: {video_url}")
         video_id = get_video_id(video_url)
+        
+        if not video_id:
+            error_message = "Não foi possível extrair o ID do vídeo da URL fornecida."
+            print(error_message)
+            send_transcript_to_webhook(webhook_url, video_url, error_message)
+            return jsonify({"error": error_message}), 400
+        
         transcript = get_transcript(video_id)
         
         if transcript:
@@ -43,15 +50,27 @@ def transcribe():
     except Exception as e:
         print(f"Erro durante o processamento: {str(e)}", file=sys.stderr)
         return jsonify({"error": str(e)}), 500
+    
+
 def get_video_id(url):
-    if 'youtu.be' in url:
-        return url.split('/')[-1]
-    elif 'youtube.com' in url:
-        return url.split('v=')[1].split('&')[0]
-    else:
-        raise ValueError("URL do YouTube inválida")
+    if not url:
+        return None
+    try:
+        if 'youtu.be' in url:
+            return url.split('/')[-1]
+        elif 'youtube.com' in url:
+            return url.split('v=')[1].split('&')[0]
+        else:
+            print(f"URL do YouTube inválida: {url}")
+            return None
+    except Exception as e:
+        print(f"Erro ao extrair o ID do vídeo: {str(e)}")
+        return None
 
 def get_transcript(video_id):
+    if not video_id:
+        print("ID do vídeo é nulo ou vazio")
+        return None
     try:
         print(f"Tentando obter a transcrição para o vídeo ID: {video_id}")
         transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=['pt'])

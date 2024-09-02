@@ -3,6 +3,7 @@ from youtube_transcript_api import YouTubeTranscriptApi, TranscriptsDisabled, No
 import sys
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import os
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
@@ -74,7 +75,15 @@ def get_transcript(video_id):
         return None
     try:
         print(f"Tentando obter a transcrição para o vídeo ID: {video_id}")
-        proxies = {"https": "https://copilot-yt.vercel.app:10000"}
+        
+        # Exemplo sem autenticação
+        # proxies = None
+        
+        # Exemplo com autenticação na Vercel
+        proxies = {
+            "https": f"https://{os.environ.get('guilhermebarbosa19@gmail.com')}:{os.environ.get('@Chuva281180@')}@copilot-yt.vercel.app:10000"
+        }
+        
         transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=['pt', 'en'], preserve_formatting=True, proxies=proxies)
         print(f"Transcrição obtida com sucesso: {transcript}")
         if not transcript:

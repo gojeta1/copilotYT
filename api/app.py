@@ -24,7 +24,6 @@ def transcribe():
     if not video_url:
         return jsonify({"error": "URL do vídeo não fornecida"}), 400
 
-    return jsonify({"valor": video_url})
     try:
         print(f"URL do vídeo recebida: {video_url}")
         video_id = get_video_id(video_url)
@@ -36,7 +35,7 @@ def transcribe():
             return jsonify({"error": error_message}), 400
         
         transcript = get_transcript(video_id)
-        
+        return jsonify({"valor":transcript})
         if transcript:
             print(f"Transcrição para o vídeo {video_id} obtida com sucesso.")
             response = send_transcript_to_webhook(webhook_url, video_url, transcript)

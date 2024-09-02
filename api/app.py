@@ -27,7 +27,7 @@ def transcribe():
     try:
         print(f"URL do vídeo recebida: {video_url}")
         video_id = get_video_id(video_url)
-        return jsonify({"valor":video_id})
+        
         if not video_id:
             error_message = "Não foi possível extrair o ID do vídeo da URL fornecida."
             print(error_message)

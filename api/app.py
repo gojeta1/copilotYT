@@ -81,10 +81,10 @@ def get_transcript(video_id):
         
         # Exemplo com autenticação na Vercel
         proxies = {
-            "https": f"https://{os.environ.get('guilhermebarbosa19@gmail.com')}:{os.environ.get('@Chuva281180@')}@copilot-yt.vercel.app:10000"
+            "https": f"https://copilot-yt.vercel.app:10000"
         }
         
-        transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=['pt', 'en'], preserve_formatting=True, proxies=proxies)
+        transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=['pt', 'en'], proxies=proxies)
         print(f"Transcrição obtida com sucesso: {transcript}")
         if not transcript:
             print("A transcrição está vazia")

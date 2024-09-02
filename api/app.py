@@ -75,16 +75,7 @@ def get_transcript(video_id):
         return None
     try:
         print(f"Tentando obter a transcrição para o vídeo ID: {video_id}")
-        
-        # Exemplo sem autenticação
-        # proxies = None
-        
-        # Exemplo com autenticação na Vercel
-        proxies = {
-            "https": f"https://copilot-yt.vercel.app:10000"
-        }
-        
-        transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=['pt', 'en'], proxies=proxies)
+        transcript = YouTubeTranscriptApi.get_transcript(video_id)
         print(f"Transcrição obtida com sucesso: {transcript}")
         if not transcript:
             print("A transcrição está vazia")

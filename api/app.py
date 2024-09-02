@@ -27,7 +27,7 @@ def transcribe():
     try:
         print(f"URL do vídeo recebida: {video_url}")
         video_id = get_video_id(video_url)
-        
+
         if not video_id:
             error_message = "Não foi possível extrair o ID do vídeo da URL fornecida."
             print(error_message)
@@ -35,19 +35,19 @@ def transcribe():
             return jsonify({"error": error_message}), 400
         
         transcript = get_transcript(video_id)
-
-        if transcript:
-            print(f"Transcrição para o vídeo {video_id} obtida com sucesso.")
-            response = send_transcript_to_webhook(webhook_url, video_url, transcript)
-            if response:
-                return jsonify(response)
-            else:
-                return jsonify({"error": "Erro ao enviar transcrição para o webhook"}), 500
-        else:
-            print(f"Não foi possível obter a transcrição para o vídeo {video_id}")
-            error_message = "Não foi possível obter a transcrição. Verifique se o vídeo tem legendas disponíveis."
-            send_transcript_to_webhook(webhook_url, video_url, error_message)
-            return jsonify({"error": error_message}), 404
+        return jsonify({"valor":transcript, "video_id":video_id})
+    #     if transcript:
+    #         print(f"Transcrição para o vídeo {video_id} obtida com sucesso.")
+    #         response = send_transcript_to_webhook(webhook_url, video_url, transcript)
+    #         if response:
+    #             return jsonify(response)
+    #         else:
+    #             return jsonify({"error": "Erro ao enviar transcrição para o webhook"}), 500
+    #     else:
+    #         print(f"Não foi possível obter a transcrição para o vídeo {video_id}")
+    #         error_message = "Não foi possível obter a transcrição. Verifique se o vídeo tem legendas disponíveis."
+    #         send_transcript_to_webhook(webhook_url, video_url, error_message)
+    #         return jsonify({"error": error_message}), 404
     except Exception as e:
         print(f"Erro durante o processamento: {str(e)}", file=sys.stderr)
         return jsonify({"error": str(e)}), 500
@@ -83,21 +83,21 @@ def get_transcript(video_id):
         print(f"Erro ao obter a transcrição: {str(e)}", file=sys.stderr)
         return None
 
-def send_transcript_to_webhook(webhook_url, video_url, transcript):
-    payload = {
-        'videoUrl': video_url,
-        'transcript': transcript
-    }
-    try:
-        response = requests.post(webhook_url, json=payload)
-        response.raise_for_status()
-        print("Transcrição enviada com sucesso para o webhook")
-        print(f"Resposta do servidor: {response.text}")
-        return {"message": "Transcrição enviada com sucesso"}
-    except requests.RequestException as e:
-        print(f"Erro ao enviar transcrição: {e}", file=sys.stderr)
-        print(f"Resposta do servidor: {e.response.text if e.response else 'Sem resposta'}", file=sys.stderr)
-        return None
+# def send_transcript_to_webhook(webhook_url, video_url, transcript):
+#     payload = {
+#         'videoUrl': video_url,
+#         'transcript': transcript
+#     }
+#     try:
+#         response = requests.post(webhook_url, json=payload)
+#         response.raise_for_status()
+#         print("Transcrição enviada com sucesso para o webhook")
+#         print(f"Resposta do servidor: {response.text}")
+#         return {"message": "Transcrição enviada com sucesso"}
+#     except requests.RequestException as e:
+#         print(f"Erro ao enviar transcrição: {e}", file=sys.stderr)
+#         print(f"Resposta do servidor: {e.response.text if e.response else 'Sem resposta'}", file=sys.stderr)
+#         return None
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=10000, debug=True)

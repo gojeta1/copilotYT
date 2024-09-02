@@ -69,12 +69,14 @@ def get_video_id(url):
         return None
 
 def get_transcript(video_id):
+
     if not video_id:
         print("ID do vídeo é nulo ou vazio")
         return None
     try:
         print(f"Tentando obter a transcrição para o vídeo ID: {video_id}")
         transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=['pt'])
+        return jsonify({"valor":transcript})
         print(f"Transcrição obtida com sucesso: {transcript}")
         return ' '.join([entry['text'] for entry in transcript])
     except Exception as e:

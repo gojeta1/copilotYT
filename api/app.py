@@ -75,10 +75,7 @@ def get_transcript(video_id):
         return None
     try:
         print(f"Tentando obter a transcrição para o vídeo ID: {video_id}")
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"
-        }
-        transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=['pt', 'en'], proxies=None, headers=headers)
+        transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=['pt', 'en'])
         print(f"Transcrição obtida com sucesso: {transcript}")
         if not transcript:
             print("A transcrição está vazia")
@@ -94,21 +91,21 @@ def get_transcript(video_id):
         print(f"Erro ao obter a transcrição: {str(e)}", file=sys.stderr)
         return None
 
-# def send_transcript_to_webhook(webhook_url, video_url, transcript):
-#     payload = {
-#         'videoUrl': video_url,
-#         'transcript': transcript
-#     }
-#     try:
-#         response = requests.post(webhook_url, json=payload)
-#         response.raise_for_status()
-#         print("Transcrição enviada com sucesso para o webhook")
-#         print(f"Resposta do servidor: {response.text}")
-#         return {"message": "Transcrição enviada com sucesso"}
-#     except requests.RequestException as e:
-#         print(f"Erro ao enviar transcrição: {e}", file=sys.stderr)
-#         print(f"Resposta do servidor: {e.response.text if e.response else 'Sem resposta'}", file=sys.stderr)
-#         return None
+def send_transcript_to_webhook(webhook_url, video_url, transcript):
+    payload = {
+        'videoUrl': video_url,
+        'transcript': transcript
+    }
+    try:
+        response = requests.post(webhook_url, json=payload)
+        response.raise_for_status()
+        print("Transcrição enviada com sucesso para o webhook")
+        print(f"Resposta do servidor: {response.text}")
+        return {"message": "Transcrição enviada com sucesso"}
+    except requests.RequestException as e:
+        print(f"Erro ao enviar transcrição: {e}", file=sys.stderr)
+        print(f"Resposta do servidor: {e.response.text if e.response else 'Sem resposta'}", file=sys.stderr)
+        return None
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=10000, debug=True)

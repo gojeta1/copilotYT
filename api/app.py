@@ -75,12 +75,22 @@ def get_transcript(video_id):
         return None
     try:
         print(f"Tentando obter a transcrição para o vídeo ID: {video_id}")
-        transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=['pt', 'en'])
-        print(f"Transcrição obtida com sucesso: {transcript}")
-        if not transcript:
-            print("A transcrição está vazia")
+
+        # Definindo o User-Agent
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"
+        }
+
+        # Fazendo a requisição diretamente usando a biblioteca requests
+        response = requests.get(f'https://www.youtube.com/api/timedtext?lang=en&v={video_id}', headers=headers)
+
+        if response.status_code == 200:
+            transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=['pt', 'en'])
+            print(f"Transcrição obtida com sucesso: {transcript}")
+            return ' '.join([entry['text'] for entry in transcript])
+        else:
+            print(f"Erro ao obter a transcrição: {response.status_code}")
             return None
-        return ' '.join([entry['text'] for entry in transcript])
     except TranscriptsDisabled:
         print(f"As legendas estão desativadas para o vídeo {video_id}")
         return None

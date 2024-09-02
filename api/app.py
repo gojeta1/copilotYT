@@ -69,16 +69,23 @@ def get_video_id(url):
         return None
 
 def get_transcript(video_id):
-
     if not video_id:
         print("ID do vídeo é nulo ou vazio")
         return None
     try:
         print(f"Tentando obter a transcrição para o vídeo ID: {video_id}")
-        transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=['pt'])
-        return jsonify({"valor":transcript})
+        transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=['pt', 'en', 'es', 'fr', 'de', 'it', 'ja', 'zh', 'ko', 'ru', 'ar', 'hi', 'bn', 'id', 'ms', 'ta', 'te', 'th', 'vi', 'tr', 'ur', 'az', 'be', 'bg', 'ca', 'cs', 'da', 'el', 'et', 'eu', 'fa', 'fi', 'gl', 'he', 'hr', 'hu', 'hy', 'ia', 'is', 'ka', 'km', 'ku', 'la', 'lt', 'lv', 'mk', 'ml', 'mn', 'mr', 'ms', 'nb', 'ne', 'nl', 'nn', 'no', 'pl', 'pt', 'ro', 'si', 'sk', 'sl', 'sq', 'sr', 'sv', 'sw', 'ta', 'te', 'th', 'tl', 'tr', 'uk', 'ur', 'uz', 'vi', 'zh'])
         print(f"Transcrição obtida com sucesso: {transcript}")
+        if not transcript:
+            print("A transcrição está vazia")
+            return None
         return ' '.join([entry['text'] for entry in transcript])
+    except TranscriptsDisabled:
+        print(f"As legendas estão desativadas para o vídeo {video_id}")
+        return None
+    except NoTranscriptFound:
+        print(f"Nenhuma transcrição encontrada para o vídeo {video_id}")
+        return None
     except Exception as e:
         print(f"Erro ao obter a transcrição: {str(e)}", file=sys.stderr)
         return None

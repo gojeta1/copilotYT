@@ -39,19 +39,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
             console.log('Resposta do servidor:', response);
 
-            if (!response.ok) {
-                throw new Error(`Erro na resposta do servidor: ${response.status} ${response.statusText}`);
-            }
+            // if (!response.ok) {
+            //     throw new Error(`Erro na resposta do servidor: ${response.status} ${response.statusText}`);
+            // }
 
-            const responseData = await response.json();
-            console.log('Resposta do servidor:', responseData);
+            // const responseData = await response.json();
+            // console.log('Resposta do servidor:', responseData);
 
-            if (responseData.error) {
-                throw new Error(responseData.error);
-            }
+            // if (responseData.error) {
+            //     throw new Error(responseData.error);
+            // }
 
-            // Busca os dados do Airtable após a conclusão do fluxo no n8n
-            await fetchAirtableData(videoUrl);
+            // // Busca os dados do Airtable após a conclusão do fluxo no n8n
+            // await fetchAirtableData(videoUrl);
             
         } catch (error) {
             console.error('Erro na requisição:', error);

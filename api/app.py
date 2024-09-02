@@ -1,5 +1,5 @@
 import requests
-from youtube_transcript_api import YouTubeTranscriptApi
+from youtube_transcript_api import YouTubeTranscriptApi, TranscriptsDisabled, NoTranscriptFound
 import sys
 from flask import Flask, request, jsonify
 from flask_cors import CORS
